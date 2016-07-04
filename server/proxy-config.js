@@ -16,10 +16,8 @@
 module.exports = {
   // Calls to /api/foo will get routed to
   // http://jsonplaceholder.typicode.com/foo.
-  /*
-  '/api/': {
-    target: 'http://jsonplaceholder.typicode.com',
+  '/api/getIssues': {
+    target: 'https://api.github.com/repos/rails/rails/issues',
     changeOrigin: true,
   },
-  */
 };

@@ -1,23 +1,21 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/index.d.ts" />
 
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { viewIssue } from '../actions';
-import {GithubState} from '../Store/GithubState';
-import {Issue} from '../Store/Issue';
-import {Labels} from './Labels';
+import {Issue} from '../../reducers/entities/Issue';
+import {Labels} from '../labels';
 
-import {ActionDescription} from 'material-ui/lib/svg-icons';
+import {ActionDescription} from 'material-ui/svg-icons';
 import {Card, CardActions, CardText, CardTitle, CardMedia} from 'material-ui';
 import {RaisedButton, IconButton, AppBar} from 'material-ui';
-import {Colors} from 'material-ui/lib/styles';
+import {colors} from 'material-ui/styles';
 import {ListItem, Divider} from 'material-ui';
 import {Avatar, IconMenu, MenuItem} from 'material-ui';
 import { browserHistory } from 'react-router';
 
 interface IIssuesListItemProps {
-    dispatch?: (func: any) => void;
     issue?: Issue;
+    viewIssue: (issue: Issue) => void;
 }
 
 const contentStyle = {
@@ -26,10 +24,10 @@ const contentStyle = {
 const iconButtonElement = (
     <IconButton
         touch={true}
-        tooltip='Details'
-        tooltipPosition='top-right'
+        tooltip="Details"
+        tooltipPosition="top-right"
         >
-        <ActionDescription color={Colors.grey400} />
+        <ActionDescription color={colors.grey400} />
     </IconButton>
 );
 
@@ -43,12 +41,12 @@ const rightIconMenu = (
 export class IssuesListItem extends React.Component<IIssuesListItemProps, {}> {
 
     public shouldComponentUpdate(nextProps: IIssuesListItemProps, nextState: any) {
-        const {dispatch, issue} = nextProps;
+        const {issue} = nextProps;
         return this.props.issue !== nextProps.issue;
     }
 
     public render(): React.ReactElement<{}> {
-        var { dispatch, issue }: IIssuesListItemProps = this.props;
+        let { issue, viewIssue }: IIssuesListItemProps = this.props;
 
         return (
             <div onClick={() => this.goToDetails(this.props)}>
@@ -58,18 +56,18 @@ export class IssuesListItem extends React.Component<IIssuesListItemProps, {}> {
                     rightIconButton={rightIconMenu}
                     secondaryText={
                         <p>
-                            <span style={{ color: Colors.darkBlack }}>{issue.title}</span> -- 
+                            <span style={{ color: colors.darkBlack }}>{issue.title}</span> -- 
                             {issue.body.substr(0, 140)}
                         </p>
                     }
                     secondaryTextLines={5}
                     />
-                    <Labels allLabels={issue.labels} dispatch={dispatch}/>
+                    <Labels allLabels={issue.labels}/>
             </div>
         );
     }
-    private goToDetails(props: IIssuesListItemProps): void{
-        props.dispatch(viewIssue(props.issue));
+    private goToDetails(props: IIssuesListItemProps): void {
+        props.viewIssue(props.issue);
         browserHistory.push('/details');
     }
 }

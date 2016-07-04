@@ -1,21 +1,20 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/index.d.ts" />
 
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { GetIssuesFromServer } from '../actions';
-import {GithubState} from '../Store/GithubState';
-import {Issue} from '../Store/Issue';
-import {IssuesListItem} from './IssuesListItem';
-import {ActionGrade} from 'material-ui/lib/svg-icons';
-import {Colors} from 'material-ui/lib/styles';
+import { viewIssue } from '../actions';
+import {Issue} from '../../reducers/entities/Issue';
+import {Labels} from '../labels';
+import {IssuesListItem} from '../IssuesListItem';
+
+import {colors} from 'material-ui/styles';
 import {Card, CardActions, CardText, CardTitle, CardMedia} from 'material-ui';
 import {RaisedButton, IconButton, AppBar} from 'material-ui';
 import {List, ListItem, Divider} from 'material-ui';
 
 
 interface IIssuesListProps {
-    dispatch?: (func: any) => void;
     allIssues?: Issue[];
+    viewIssue: (issue: Issue) => void;
 }
 
 const contentStyle = {
@@ -34,15 +33,15 @@ const deleteStyle = {
 export class IssuesList extends React.Component<IIssuesListProps, {}> {
 
     public shouldComponentUpdate(nextProps: IIssuesListProps, nextState: any) {
-        const {dispatch, allIssues} = nextProps;
+        const {allIssues} = nextProps;
         return this.props.allIssues !== nextProps.allIssues;
     }
 
     public render(): React.ReactElement<{}> {
-        var { dispatch, allIssues }: any = this.props;
+        var { allIssues }: any = this.props;
         var issues = [];
         allIssues.forEach(element => {
-            issues.push(<IssuesListItem issue={element} dispatch={dispatch}/>)
+            issues.push(<IssuesListItem issue={element}/>)
             issues.push(<Divider inset={true} />);
         });
         return (

@@ -1,19 +1,10 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../../typings/index.d.ts" />
 
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { GetIssuesFromServer } from '../actions';
-import {GithubState} from '../Store/GithubState';
-import {Label} from '../Store/Label';
-import {SocialNotifications} from 'material-ui/lib/svg-icons/social/notifications';
-import {Card, CardActions, CardText, CardTitle, CardMedia} from 'material-ui';
+import {Label} from '../../reducers/entities/Label';
 import {RaisedButton, IconButton, AppBar} from 'material-ui';
-import {Badge} from 'material-ui';
-
-
 
 interface ILabelsProps {
-    dispatch?: (func: any) => void;
     allLabels?: Label[];
 }
 
@@ -25,12 +16,12 @@ const contentStyle = {
 export class Labels extends React.Component<ILabelsProps, {}> {
 
     public shouldComponentUpdate(nextProps: ILabelsProps, nextState: any) {
-        const {dispatch, allLabels} = nextProps;
+        const {allLabels} = nextProps;
         return this.props.allLabels !== nextProps.allLabels;
     }
 
     public render(): React.ReactElement<{}> {
-        let { dispatch, allLabels }: ILabelsProps = this.props;
+        let { allLabels }: ILabelsProps = this.props;
         let labels = [];
 
         for (let i = 0; i < allLabels.length; i++) {

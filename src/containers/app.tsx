@@ -3,71 +3,68 @@ const connect = require('react-redux').connect;
 const Link = require('react-router').Link;
 
 import { loginUser, logoutUser } from '../actions/session';
-import Button from '../components/button';
-import Content from '../components/content';
-import LoginModal from '../components/login/login-modal';
-import Logo from '../components/logo';
-import Navigator from '../components/navigator';
-import NavigatorItem from '../components/navigator-item';
+import {IssuesList} from '../components/IssuesList';
+import {ContentAdd} from 'material-ui/svg-icons/content/add';
+import {ContentRemove} from 'material-ui/svg-icons/content/remove';
+import {IconButton, FloatingActionButton, AppBar} from 'material-ui';
+import {Issue} from '../reducers/Entities/Issue';
+import {GetIssuesFromServer, viewIssue} from '../actions/github';
 
 interface IAppProps extends React.Props<any> {
-  session: any;
-  login: () => void;
-  logout: () => void;
+  allIssues?: Issue[];
+  pageNumber?: number;
+  goToPage: (props: IAppProps, change: number) => void;
+  viewIssue: (issue: Issue) => void;
+};
+
+const contentStyle = {
+  margin: '10px'
+};
+const pageStyle = {
+  marginRight: 20,
 };
 
 function mapStateToProps(state) {
   return {
-    session: state.session,
-    router: state.router,
+  allIssues: state.allIssues,
+  pageNumber: state.page,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    login: () => dispatch(loginUser()),
+    goToPage: (props: IAppProps, change: number) => dispatch(GetIssuesFromServer(props.pageNumber + change)),
+    viewIssue: (issue: Issue) => dispatch(viewIssue(issue)),
     logout: () => dispatch(logoutUser()),
   };
 }
 
 class App extends React.Component<IAppProps, void> {
   render() {
-    const { children, session, login, logout } = this.props;
-    const token = session.get('token', false);
-    const isLoggedIn = token && token !== null && typeof token !== 'undefined';
-    const firstName = session.getIn(['user', 'firstName'], '');
-    const lastName = session.getIn(['user', 'lastName'], '');
+    const { children, allIssues, pageNumber, goToPage } = this.props;
 
     return (
-      <div>
-        <LoginModal
-          onSubmit={ login }
-          isPending={ session.get('isLoading', false) }
-          hasError={ session.get('hasError', false) }
-          isVisible={ !isLoggedIn } />
-        <Navigator>
-          <NavigatorItem mr>
-            <Logo />
-          </NavigatorItem>
-          <NavigatorItem isVisible={ isLoggedIn } mr>
-            <Link to="/">Counter</Link>
-          </NavigatorItem>
-          <NavigatorItem isVisible={ isLoggedIn }>
-            <Link to="/about">About Us</Link>
-          </NavigatorItem>
-          <div className="flex flex-auto"></div>
-          <NavigatorItem isVisible={ isLoggedIn } mr>
-            <b>{ `${ firstName } ${ lastName }` }</b>
-          </NavigatorItem>
-          <NavigatorItem isVisible={ isLoggedIn }>
-            <Button onClick={ logout } className="bg-red white">
-              Logout
-            </Button>
-          </NavigatorItem>
-        </Navigator>
-        <Content isVisible={ isLoggedIn }>
-          { children }
-        </Content>
+      <div style={contentStyle}>
+        <AppBar title='Github Issue Viewer'
+          iconElementRight={
+            <IconButton onClick={() => window.location.href = 'https://github.com/nimatra/GithubIssueViewer'}>
+              <img src='/public/github.png' />
+            </IconButton>}
+          />
+        <IssuesList allIssues={allIssues} viewIssue={viewIssue}/>
+
+        <FloatingActionButton mini={true} secondary={true} style={pageStyle}
+          onClick={() => goToPage(this.props, -1) }>
+          <ContentRemove />
+        </FloatingActionButton>
+
+        <FloatingActionButton disabled={true} style={pageStyle} label={pageNumber}>
+        </FloatingActionButton>
+
+        <FloatingActionButton mini={true} secondary={false} style={pageStyle}
+          onClick={() => goToPage(this.props,  1) } >
+          <ContentAdd />
+        </FloatingActionButton>
       </div>
     );
   };

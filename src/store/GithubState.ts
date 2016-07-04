@@ -4,5 +4,4 @@ import {Issue} from './Issue';
 export class GithubState {
     public activeIssue: Issue;
     public allIssues: Issue[];
-    public pageNumber: number;
 }

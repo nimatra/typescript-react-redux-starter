@@ -1,12 +1,10 @@
 import { combineReducers } from 'redux';
 const { routerReducer } = require('react-router-redux');
 const formReducer = require('redux-form').reducer;
-import counter from './counter';
-import session from './session';
+import github from './github';
 
 const rootReducer = combineReducers({
-  session,
-  counter,
+  github,
   routing: routerReducer,
   form: formReducer,
 });

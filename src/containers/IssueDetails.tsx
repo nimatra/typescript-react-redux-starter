@@ -1,23 +1,23 @@
-/// <reference path="../../typings/tsd.d.ts" />
+/// <reference path="../../typings/index.d.ts" />
 
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { GetIssuesFromServer } from '../actions';
-import {GithubState} from '../Store/GithubState';
-import {Issue} from '../Store/Issue';
-import {Labels} from './Labels';
+import { viewIssue } from '../actions/github';
+import {Issue} from '../reducers/entities/Issue';
+import {Labels} from '../components/labels';
 
-import {ActionDescription} from 'material-ui/lib/svg-icons';
+import {ActionDescription} from 'material-ui/svg-icons';
 import {Card, CardActions, CardText, CardTitle, CardHeader} from 'material-ui';
 import {RaisedButton, IconButton, AppBar} from 'material-ui';
-import {Colors} from 'material-ui/lib/styles';
+import {colors} from 'material-ui/styles';
 import {ListItem, Divider} from 'material-ui';
 import {Avatar, IconMenu, MenuItem} from 'material-ui';
-import { browserHistory } from 'react-router';
+import {GetCommentsFromServer} from '../actions/github';
+
+const { browserHistory } = require('react-router');
+const connect = require('react-redux').connect;
 
 
 interface IIssueDetailsProps {
-    dispatch?: (func: any) => void;
     issue?: Issue;
 }
 
@@ -26,23 +26,28 @@ const contentStyle = {
 };
 
 
-function select(state: GithubState): IIssueDetailsProps {
+function mapStateToProps(state) {
   return {
-    issue: state.activeIssue,
+  issue: state.activeIssue,
   };
 }
 
-@connect(select)
-export class IssueDetails extends React.Component<IIssueDetailsProps, {}> {
+function mapDispatchToProps(dispatch) {
+  return {
+    getComments: (props: IIssueDetailsProps) => dispatch(GetCommentsFromServer(props.issue.id)),
+  };
+}
+
+class IssueDetails extends React.Component<IIssueDetailsProps, {}> {
 
     public shouldComponentUpdate(nextProps: IIssueDetailsProps, nextState: any) {
-        const {dispatch, issue} = nextProps;
+        const {issue} = nextProps;
         return this.props.issue !== nextProps.issue;
     }
 
     public render(): React.ReactElement<{}> {
-        var { dispatch, issue }: IIssueDetailsProps = this.props;
-        if(issue == undefined || issue == null || issue.user == undefined){
+        let { issue }: IIssueDetailsProps = this.props;
+        if (issue === undefined || issue == null || issue.user === undefined) {
             browserHistory.push('/app');
             return null;
         }
@@ -59,8 +64,13 @@ export class IssueDetails extends React.Component<IIssueDetailsProps, {}> {
                         {issue.body}
                     </CardText>
                 </Card>
-                <Labels allLabels={issue.labels} dispatch={dispatch}/>
+                <Labels allLabels={issue.labels}/>
             </div>
         );
     }
 }
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(IssueDetails);
