@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
  */
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // Enable various security helpers.
 app.use(helmet());

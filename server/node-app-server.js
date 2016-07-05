@@ -9,6 +9,7 @@ const express = require('express');
  * This should be the last router in your express server's chain.
  */
 module.exports = (app) => {
+  app.use('/public', express.static(__dirname + '/public'));
   const distPath = path.join(__dirname, '../dist');
   const indexFileName = 'index.html';
   app.use(express.static(distPath));

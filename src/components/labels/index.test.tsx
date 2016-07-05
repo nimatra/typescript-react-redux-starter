@@ -1,49 +1,27 @@
 import { assert } from 'chai';
 import { shallow, render } from 'enzyme';
 import * as sinon from 'sinon';
+import mockIssueList from '../../reducers/entities/mockIssueList';
+import {RaisedButton} from 'material-ui';
 
 import * as React from 'react';
-import Alert from './index';
+import {Labels} from './index';
 
 
-describe('Alert Component', () => {
+describe('Container Component', () => {
 
-  it('should create an alert with the default classes', () => {
+  it('should create an Labels', () => {
+    const container = shallow( <Labels>Hello World</Labels> );
 
-    const alert = shallow(<Alert>Loading...</Alert>);
-
-    assert.isDefined(alert, 'alert exists');
-    assert(alert.text() === 'Loading...');   
-    assert.isTrue(alert.hasClass('p2'));
-    assert.isTrue(alert.hasClass('bg-blue white'));
-    assert.isTrue(alert.hasClass('hide'));
-    assert.isFalse(alert.hasClass('block'));
-
+    assert.isOk(container.length, 'Labels not created');
+    assert.strictEqual(container.text(), 'Hello World', 
+       'Child contents not found');
   });
 
-  it('should create an alert with the correct class for the isVisible value',
-   () => {
-   
-    const alert = shallow(<Alert isVisible>Loading...</Alert>);
+  it('should create an Labels with a RaisedButton inside it',
+    () => {
+    const container = shallow( <Labels allLabels={mockIssueList[0].labels} /> );
 
-    assert.isFalse(alert.hasClass('hide'));
-    assert.isTrue(alert.hasClass('block'));
-
-  });
-
-  it('should create an alert with the correct class for the given status value',
-   () => {
-   
-    const alert = shallow(<Alert status={'error'}>Error</Alert>);
-
-    assert.isTrue(alert.hasClass('bg-red white'));
-
-  });
-
-  it('should create an alert with the given id value', () => {
-    const alert = shallow(<Alert id={'This id'}>Loading...</Alert>);
-    
-    assert.strictEqual(alert.prop('id'), 'This id',
-      'status value is not set'); 
+    assert.isTrue(container.contains(<RaisedButton/>));
   });
 });

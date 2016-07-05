@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/index.d.ts" />
 
 import * as React from 'react';
-import { viewIssue } from '../actions';
+import { viewIssue } from '../../actions/github';
 import {Issue} from '../../reducers/entities/Issue';
 import {Labels} from '../labels';
 import {IssuesListItem} from '../IssuesListItem';
@@ -13,8 +13,8 @@ import {List, ListItem, Divider} from 'material-ui';
 
 
 interface IIssuesListProps {
+    dispatch?: (func: any) => void;
     allIssues?: Issue[];
-    viewIssue: (issue: Issue) => void;
 }
 
 const contentStyle = {
@@ -38,17 +38,20 @@ export class IssuesList extends React.Component<IIssuesListProps, {}> {
     }
 
     public render(): React.ReactElement<{}> {
-        var { allIssues }: any = this.props;
-        var issues = [];
-        allIssues.forEach(element => {
-            issues.push(<IssuesListItem issue={element}/>)
-            issues.push(<Divider inset={true} />);
-        });
+        let { allIssues, dispatch }: IIssuesListProps = this.props;
+        let issues = [];
+        if (allIssues != null) {
+            allIssues.forEach(element => {
+                issues.push(<IssuesListItem issue={element} dispatch={dispatch}/>)
+                issues.push(<Divider inset={true} />);
+            });
+        }
         return (
             <div style={contentStyle}>
                 <List>
                     {issues}
                 </List>
+                {this.props.children}
             </div >
         );
     }

@@ -1,48 +1,35 @@
 import { assert } from 'chai';
 import { shallow, render } from 'enzyme';
 import * as sinon from 'sinon';
+import mockIssueList from '../../reducers/entities/mockIssueList';
+import {ListItem} from 'material-ui';
 
 import * as React from 'react';
-import Button from './index';
+import {IssuesListItem} from './index';
+import {Labels} from '../Labels/index';
 
 
-describe('Button Component', () => {
-  it('should create a button with a default type and classes', () => {
-    const wrapper = shallow(<Button>OK</Button>);
-    const button = wrapper.find('button');
+describe('Container Component', () => {
 
-    assert.strictEqual(button.length, 1,
-      'button not found');
-    assert.strictEqual(button.text(), 'OK',
-      'child contents not found');
-    assert.strictEqual(button.prop('type'), 'button',
-      'default type is not "button"');
-    assert.isTrue(button.hasClass('btn-primary'));
+  it('should create an IssuesListItem', () => {
+    const container = shallow( <IssuesListItem>Hello World</IssuesListItem> );
+
+    assert.isOk(container.length, 'IssuesListItem not created');
+    assert.strictEqual(container.text(), 'Hello World', 
+       'Child contents not found');
   });
 
-  it('should allow for a custom css class in addition to the default', () => {
-    const wrapper = render(
-      <Button className="bg-green">OK</Button>
-    );
-    const button = wrapper.find('button');
-    assert.isTrue(button.hasClass('bg-green'));
-    assert.isTrue(button.hasClass('btn-primary'));
+  it('should create an IssuesListItem with a ListItem inside it',
+    () => {
+    const container = shallow( <IssuesListItem issue={mockIssueList[0]} /> );
+
+    assert.isTrue(container.contains(<ListItem/>));
   });
 
-  it('should create a submit button', () => {
-    const wrapper = shallow(<Button type="submit">Submit</Button>);
-    const button = wrapper.find('button');
+  it('should create an IssuesListItem with Labels inside it',
+    () => {
+    const container = shallow( <IssuesListItem issue={mockIssueList[0]} /> );
 
-    assert.strictEqual(button.prop('type'), 'submit');
+    assert.isTrue(container.contains(<Labels/>));
   });
-
-  it('should respond to click events', () => {
-    const onButtonClick = sinon.spy();
-    const wrapper = shallow(
-      <Button onClick={onButtonClick} />
-    );
-    wrapper.simulate('click');
-    assert.isTrue(onButtonClick.calledOnce);
-  });
-
 });

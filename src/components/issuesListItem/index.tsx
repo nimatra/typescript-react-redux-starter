@@ -1,21 +1,21 @@
 /// <reference path="../../../typings/index.d.ts" />
 
 import * as React from 'react';
-import { viewIssue } from '../actions';
+import { viewIssue } from '../../actions/github';
 import {Issue} from '../../reducers/entities/Issue';
 import {Labels} from '../labels';
 
 import {ActionDescription} from 'material-ui/svg-icons';
-import {Card, CardActions, CardText, CardTitle, CardMedia} from 'material-ui';
 import {RaisedButton, IconButton, AppBar} from 'material-ui';
 import {colors} from 'material-ui/styles';
 import {ListItem, Divider} from 'material-ui';
 import {Avatar, IconMenu, MenuItem} from 'material-ui';
-import { browserHistory } from 'react-router';
+
+const { browserHistory } = require('react-router');
 
 interface IIssuesListItemProps {
+    dispatch?: (func: any) => void;
     issue?: Issue;
-    viewIssue: (issue: Issue) => void;
 }
 
 const contentStyle = {
@@ -46,7 +46,7 @@ export class IssuesListItem extends React.Component<IIssuesListItemProps, {}> {
     }
 
     public render(): React.ReactElement<{}> {
-        let { issue, viewIssue }: IIssuesListItemProps = this.props;
+        let { issue, dispatch }: IIssuesListItemProps = this.props;
 
         return (
             <div onClick={() => this.goToDetails(this.props)}>
@@ -63,11 +63,12 @@ export class IssuesListItem extends React.Component<IIssuesListItemProps, {}> {
                     secondaryTextLines={5}
                     />
                     <Labels allLabels={issue.labels}/>
+                    {this.props.children}
             </div>
         );
     }
     private goToDetails(props: IIssuesListItemProps): void {
-        props.viewIssue(props.issue);
+        props.dispatch(viewIssue(props.issue));
         browserHistory.push('/details');
     }
 }

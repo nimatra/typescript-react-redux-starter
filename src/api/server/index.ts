@@ -4,7 +4,7 @@ export const BASE_URL = '/api';
 
 export function post(path, data) {
   return fetch(BASE_URL + path, {
-    method: 'post',
+    method: 'get',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'

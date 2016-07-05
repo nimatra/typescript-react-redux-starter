@@ -13,8 +13,7 @@ import rootReducer from '../reducers';
 
 function configureStore(initialState) {
   const store = compose(
-    _getMiddleware(),
-    ..._getEnhancers()
+    _getMiddleware()
   )(createStore)(rootReducer, initialState);
 
   _enableHotLoader(store);
@@ -33,18 +32,6 @@ function _getMiddleware() {
   }
 
   return applyMiddleware(...middleware);
-}
-
-function _getEnhancers() {
-  let enhancers = [
-    persistState('session', _getStorageConfig()),
-  ];
-
-  if (__DEV__ && window.devToolsExtension) {
-    enhancers = [...enhancers, window.devToolsExtension() ];
-  }
-
-  return enhancers;
 }
 
 function _enableHotLoader(store) {

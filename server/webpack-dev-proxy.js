@@ -9,7 +9,11 @@ module.exports = function getWebpackConfig() {
   return Object.keys(config).reduce((acc, path) => {
     acc[path + '*'] = config[path];
     acc[path + '*'].rewrite = (req) => {
-      req.url = req.url.replace(path, '');
+      if (path === '/api/getComments') {
+        req.url = req.query.url;
+      } else {
+        req.url = req.url.replace(path, '');
+      }
     };
 
     return acc;

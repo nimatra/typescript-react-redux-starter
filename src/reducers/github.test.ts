@@ -1,17 +1,18 @@
 import * as assert from 'assert';
 import fireAction from '../../test-utils/fire-action';
-import sessionReducer from '../reducers/github';
+import {githubReducer, INITIAL_STATE} from '../reducers/github';
+import mockIssueList from './entities/mockIssueList';
 
 import {
-  LOGIN_USER_PENDING,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_ERROR,
-  LOGOUT_USER,
+  GET_ISSUES,
+  GET_COMMENTS,
+  GOTO_PAGE,
+  VIEW_ISSUE,
 } from '../../src/constants/index';
 
 import { Map } from 'immutable';
 
-let state = sessionReducer();
+let state = INITIAL_STATE;
 
 describe('Session Reducer', () => {
   describe('inital state', () => {
@@ -20,45 +21,39 @@ describe('Session Reducer', () => {
     });
   });
 
-  describe('on LOGIN_USER_PENDING', () => {
-    it('should set loading to true', () => {
-      state = fireAction(sessionReducer, state, LOGIN_USER_PENDING);
-      assert(state.get('isLoading'));
-      assert(state.get('token') === null);
-    });
-  });
-
-  describe('on LOGIN_USER_SUCCESS', () => {
-    it('should save the username', () => {
+  describe('on GET_ISSUES', () => {
+    it('should save the issues', () => {
       state = fireAction(
-        sessionReducer,
+        githubReducer,
         state,
-        LOGIN_USER_SUCCESS,
-        { token: 1234 });
+        GET_ISSUES,
+        mockIssueList);
 
-      assert(!state.get('isLoading'));
-      assert(!state.get('hasError'));
-      assert(state.get('token') === 1234);
+      assert(!state.allIssues.length);
     });
   });
 
-  describe('on LOGIN_USER_ERROR', () => {
-    it('should save the username', () => {
-      state = fireAction(sessionReducer, state, LOGIN_USER_ERROR);
+  describe('on GOTO_PAGE', () => {
+    it('should change page number', () => {
+      state = fireAction(
+        githubReducer,
+        state,
+        GOTO_PAGE,
+        2);
 
-      assert(!state.get('isLoading'));
-      assert(state.get('hasError'));
+      assert(state.pageNumber != 2);
     });
   });
 
+  describe('on VIEW_ISSUE', () => {
+    it('should set the active issue', () => {
+      state = fireAction(
+        githubReducer,
+        state,
+        VIEW_ISSUE,
+        mockIssueList[0]);
 
-  describe('on LOGOUT_USER', () => {
-    it('should save the username', () => {
-      state = fireAction(sessionReducer, state, LOGOUT_USER);
-
-      assert(!state.get('isLoading'));
-      assert(!state.get('hasError'));
-      assert(state.get('token') === null);
+      assert(state.activeIssue != mockIssueList[0]);
     });
   });
 });

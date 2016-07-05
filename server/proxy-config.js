@@ -20,4 +20,8 @@ module.exports = {
     target: 'https://api.github.com/repos/rails/rails/issues',
     changeOrigin: true,
   },
+  '/api/getComments': {
+    target: 'https://api.github.com/repos/rails/rails/issues/',
+    changeOrigin: true,
+  },
 };

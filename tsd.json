@@ -4,5 +4,9 @@
   "ref": "master",
   "path": "typings",
   "bundle": "typings/tsd.d.ts",
-  "installed": {}
+  "installed": {
+    "material-ui/material-ui.d.ts": {
+      "commit": "42335c83eda05c7d7c007788629aa58d3b008fca"
+    }
+  }
 }

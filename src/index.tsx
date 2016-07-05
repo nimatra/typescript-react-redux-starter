@@ -4,26 +4,20 @@ import 'es6-promise';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-const { Provider } = require('react-redux');
-const { Router, browserHistory } = require('react-router');
-const { syncHistoryWithStore } = require('react-router-redux');
 
-import routes from './store/routes';
-import configureStore from './store/configure-store';
+import {App} from './containers/App';
+import {darkBaseTheme, lightBaseTheme} from 'material-ui/styles';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 // Global styles
 import './styles/index.css';
 
-const store = configureStore({});
-const history = syncHistoryWithStore(browserHistory, store);
-
 ReactDOM.render(
   <div>
-    <Provider store={ store }>
-      <Router history={ history }>
-        { routes }
-      </Router>
-    </Provider>
+      <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme) }>
+        <App/>
+      </MuiThemeProvider>
   </div>,
   document.getElementById('root')
 );

@@ -22,7 +22,11 @@ module.exports = (app) => {
     if (path && config) {
       winston.info(`Enabling proxy ${path} => `, config);
       app.use(path, (req, res) => {
-        proxy.web(req, res, config);
+        let configed = config;
+        if (path === '/api/getComments') {
+          configed = req.query.url;
+        }
+        proxy.web(req, res, configed);
       });
     }
   });
